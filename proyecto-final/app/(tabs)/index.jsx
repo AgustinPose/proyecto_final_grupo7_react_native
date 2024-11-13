@@ -14,7 +14,7 @@ const Feed = ({ onLogout }) => {
 
     const handleFetchFeed = async () => {
         try {
-            const response = await fetch('http://172.20.10.4:3001/api/posts/feed', { // editar esto con la ip de tu red
+            const response = await fetch('http://172.20.10.4:3001/api/posts/feed', {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -34,7 +34,7 @@ const Feed = ({ onLogout }) => {
 
     const fetchFriends = async () => {
         try {
-            const response = await fetch('http://172.20.10.4:3001/api/user/all', { // editar esto con la ip de tu red
+            const response = await fetch('http://172.20.10.4:3001/api/user/all', {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -49,7 +49,7 @@ const Feed = ({ onLogout }) => {
 
     const handleLike = async (postId) => {
       try {
-          const response = await fetch(`http://172.20.10.4:3001/api/posts/${postId}/like`, { // editar esto con la ip de tu red
+          const response = await fetch(`http://172.20.10.4:3001/api/posts/${postId}/like`, {
               method: 'POST',
               headers: { 'Authorization': `Bearer ${token}` }
           });
@@ -84,7 +84,7 @@ const Feed = ({ onLogout }) => {
 
     const renderPost = ({ item: post }) => (
       <View style={styles.postCard}>
-          <Image source={{ uri: `http://172.20.10.4:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} /> 
+          <Image source={{ uri: `http://172.20.10.4:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} />
           <Text style={styles.postUsername}>{post.user.username}</Text>
           <Text>{post.caption}</Text>
           <View style={styles.actionsRow}>
@@ -108,59 +108,76 @@ const Feed = ({ onLogout }) => {
     </View>
   );
 
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-          <View style={styles.header}>
-              <Text style={styles.appTitle}>FAKESTAGRAM</Text>
-              <Icon name="logout" type="material" onPress={onLogout} />
-          </View>
-
-          <View style={styles.searchContainer}>
-              <TextInput
-                  style={styles.searchInput}
-                  placeholder="Buscar amigo por nombre de usuario"
-                  value={searchTerm}
-                  onChangeText={setSearchTerm}
-              />
-              <Icon name="search" type="material" />
-          </View>
-
-          <FlatList
-              data={friends.filter(friend => friend.username.toLowerCase().includes(searchTerm.toLowerCase()))}
-              renderItem={renderFriend}
-              keyExtractor={item => item._id}
-              horizontal
-              style={styles.friendList}
-          />
-
-          <FlatList
-              data={posts}
-              renderItem={renderPost}
-              keyExtractor={item => item._id}
-              style={styles.postList}
-          />
-      </View>
-    </SafeAreaView>
-  );
+    return (
+        <SafeAreaView style={styles.container}>
+            <TextInput
+                placeholder="Search friends..."
+                value={searchTerm}
+                onChangeText={setSearchTerm}
+                style={styles.searchInput}
+            />
+            <FlatList
+                data={filteredFriends}
+                keyExtractor={(item) => item._id}
+                renderItem={renderFriend}
+                horizontal
+                style={styles.friendsList}
+            />
+            <FlatList
+                data={posts}
+                keyExtractor={(item) => item._id}
+                renderItem={renderPost}
+                style={styles.feedList}
+            />
+        </SafeAreaView>
+    );
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1 },
-  container: { flex: 1, padding: 10 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-  appTitle: { fontSize: 20, fontWeight: 'bold' },
-  searchContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  searchInput: { flex: 1, padding: 5, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, marginRight: 10 },
-  friendList: { marginBottom: 10, maxHeight: 80 },
-  friendCard: { alignItems: 'center', marginRight: 10 },
-  friendImage: { width: 50, height: 50, borderRadius: 25 },
-  friendName: { fontSize: 14 },
-  postList: { flex: 1 },
-  postCard: { marginBottom: 15, padding: 10, backgroundColor: '#fff', borderRadius: 5 },
-  postImage: { width: '100%', height: 200, borderRadius: 5 },
-  postUsername: { fontWeight: 'bold', marginVertical: 5 },
-  actionsRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }
+  container: {
+      flex: 1,
+  },
+  searchInput: {
+      padding: 10,
+      backgroundColor: '#eee',
+      marginVertical: 5,
+      borderRadius: 5,
+  },
+  friendsList: {
+      maxHeight: 80,
+  },
+  friendCard: {
+      alignItems: 'center',
+      marginRight: 10,
+  },
+  friendImage: {
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+  },
+  friendName: {
+      fontSize: 14,
+  },
+  postCard: {
+      padding: 10,
+      marginVertical: 5,
+      backgroundColor: '#fff',
+      borderRadius: 8,
+  },
+  postImage: {
+      width: '100%',
+      height: 200,
+      borderRadius: 8,
+  },
+  postUsername: {
+      fontWeight: 'bold',
+      fontSize: 16,
+  },
+  actionsRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      marginTop: 10,
+  },
 });
 
 export default Feed;

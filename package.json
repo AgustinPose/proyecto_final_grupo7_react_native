@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@rneui/themed": "^4.0.0-rc.8",
+    "expo-router": "^4.0.5"
+  }
+}
