@@ -29,23 +29,7 @@ const Feed = ({ onLogout }) => {
 
     useEffect(() => {
         handleFetchFeed();
-        fetchFriends();
     }, [token]);
-
-    const fetchFriends = async () => {
-        try {
-            const response = await fetch('http://172.20.10.4:3001/api/user/all', { // editar esto con la ip de tu red
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!response.ok) throw new Error('Error al obtener amigos');
-            const data = await response.json();
-            const filteredFriends = data.filter(friend => friend._id !== currentUserId);
-            setFriends(filteredFriends);
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     const handleLike = async (postId) => {
       try {
@@ -77,10 +61,6 @@ const Feed = ({ onLogout }) => {
     const handleFriendProfileClick = (friendId) => {
         navigation.navigate('UserProfile', { friendId });
     };
-
-    const filteredFriends = friends.filter(friend =>
-        friend.username.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     const renderPost = ({ item: post }) => (
       <View style={styles.postCard}>
@@ -116,24 +96,6 @@ const Feed = ({ onLogout }) => {
               <Icon name="logout" type="material" onPress={onLogout} />
           </View>
 
-          <View style={styles.searchContainer}>
-              <TextInput
-                  style={styles.searchInput}
-                  placeholder="Buscar amigo por nombre de usuario"
-                  value={searchTerm}
-                  onChangeText={setSearchTerm}
-              />
-              <Icon name="search" type="material" />
-          </View>
-
-          <FlatList
-              data={friends.filter(friend => friend.username.toLowerCase().includes(searchTerm.toLowerCase()))}
-              renderItem={renderFriend}
-              keyExtractor={item => item._id}
-              horizontal
-              style={styles.friendList}
-          />
-
           <FlatList
               data={posts}
               renderItem={renderPost}
@@ -150,8 +112,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 10 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
   appTitle: { fontSize: 20, fontWeight: 'bold' },
-  searchContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  searchInput: { flex: 1, padding: 5, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, marginRight: 10 },
   friendList: { marginBottom: 10, maxHeight: 80 },
   friendCard: { alignItems: 'center', marginRight: 10 },
   friendImage: { width: 50, height: 50, borderRadius: 25 },
