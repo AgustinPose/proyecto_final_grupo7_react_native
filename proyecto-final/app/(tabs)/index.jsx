@@ -14,7 +14,7 @@ const Feed = ({ onLogout }) => {
 
     const handleFetchFeed = async () => {
         try {
-            const response = await fetch('http://172.20.10.6:3001/api/posts/feed', {
+            const response = await fetch('http://172.20.10.4:3001/api/posts/feed', { // editar esto con la ip de tu red
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -34,7 +34,7 @@ const Feed = ({ onLogout }) => {
 
     const fetchFriends = async () => {
         try {
-            const response = await fetch('http://172.20.10.6:3001/api/user/all', {
+            const response = await fetch('http://172.20.10.4:3001/api/user/all', { // editar esto con la ip de tu red
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -49,7 +49,7 @@ const Feed = ({ onLogout }) => {
 
     const handleLike = async (postId) => {
       try {
-          const response = await fetch(`http://172.20.10.6:3001/api/posts/${postId}/like`, {
+          const response = await fetch(`http://172.20.10.4:3001/api/posts/${postId}/like`, { // editar esto con la ip de tu red
               method: 'POST',
               headers: { 'Authorization': `Bearer ${token}` }
           });
@@ -84,7 +84,7 @@ const Feed = ({ onLogout }) => {
 
     const renderPost = ({ item: post }) => (
       <View style={styles.postCard}>
-          <Image source={{ uri: `http://172.20.10.6:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} />
+          <Image source={{ uri: `http://172.20.10.4:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} /> 
           <Text style={styles.postUsername}>{post.user.username}</Text>
           <Text>{post.caption}</Text>
           <View style={styles.actionsRow}>
