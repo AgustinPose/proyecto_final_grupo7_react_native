@@ -1,37 +1,16 @@
-import { Tabs } from 'expo-router';
 import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Feed from './index';
+import SearchScreen from './searchScreen';
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+const Tab = createBottomTabNavigator();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function AppTabs() {
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Feed',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
-  );
+    return (
+        <Tab.Navigator>
+            <Tab.Screen name="Feed" component={Feed} />
+            <Tab.Screen name="Search" component={SearchScreen} />
+        </Tab.Navigator>
+    );
 }
