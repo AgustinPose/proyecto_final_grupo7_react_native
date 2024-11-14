@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, TextInput, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
@@ -8,10 +8,11 @@ const Feed = ({ onLogout }) => {
     const [posts, setPosts] = useState([]);
     const currentUserId = '67045766b9179756fe4260df'; // Reemplazar con el ID actual del usuario
     const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDQ1NzY2YjkxNzk3NTZmZTQyNjBkZiIsImlhdCI6MTczMDkxOTcyNiwiZXhwIjoxNzMzNTExNzI2fQ.EfzqxOt-tsYSHWHHG0vXlywkIWIajJ6c9zgnKX_6bBA'; // Reemplazar con el token de autenticación
-
+    const [refreshing,setRefreshing]=useState(false);
     const handleFetchFeed = async () => {
+        setRefreshing(true);
         try {
-            const response = await fetch('http://172.20.10.4:3001/api/posts/feed', {
+            const response = await fetch('http://172.20.10.6:3001/api/posts/feed', {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -22,15 +23,14 @@ const Feed = ({ onLogout }) => {
         } catch (error) {
             console.error('Fetch feed error:', error);
         }
+        setRefreshing(false);
     };
+    useEffect(()=>{handleFetchFeed()},[])
 
-    useEffect(() => {
-        handleFetchFeed();
-    }, [token]);
 
     const handleLike = async (postId) => {
         try {
-            const response = await fetch(`http://172.20.10.4:3001/api/posts/${postId}/like`, {
+            const response = await fetch(`http://172.20.10.6:3001/api/posts/${postId}/like`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -57,7 +57,7 @@ const Feed = ({ onLogout }) => {
 
     const renderPost = ({ item: post }) => (
         <View style={styles.postCard}>
-            <Image source={{ uri: `http://172.20.10.4:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} />
+            <Image source={{ uri: `http://172.20.10.6:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} />
             <Text style={styles.postUsername}>{post.user.username}</Text>
             <Text>{post.caption}</Text>
             <View style={styles.actionsRow}>
@@ -87,6 +87,8 @@ const Feed = ({ onLogout }) => {
                     renderItem={renderPost}
                     keyExtractor={item => item._id}
                     style={styles.postList}
+                    refreshing={refreshing}
+                    onRefresh={()=>{if(!refreshing){handleFetchFeed()}}}
                 />
             </View>
         </SafeAreaView>
@@ -103,8 +105,22 @@ const styles = StyleSheet.create({
     friendImage: { width: 50, height: 50, borderRadius: 25 },
     friendName: { fontSize: 14 },
     postList: { flex: 1 },
-    postCard: { marginBottom: 15, padding: 10, backgroundColor: '#fff', borderRadius: 5 },
-    postImage: { width: '100%', height: 200, borderRadius: 5 },
+    postCard: {
+        marginBottom: 15,  // Espacio debajo de la tarjeta
+        padding: 10,       // Espacio interno de la tarjeta
+        backgroundColor: '#fff',  // Color de fondo blanco
+        borderRadius: 5,   // Bordes redondeados
+        overflow: 'hidden', // Para asegurar que los bordes redondeados de la imagen también se apliquen
+    },
+    
+    postImage: {
+        width: '100%',
+        aspectRatio: 4 / 3,
+        borderRadius: 10,
+        marginVertical: 10,
+        resizeMode: 'cover',    
+    },
+    
     postUsername: { fontWeight: 'bold', marginVertical: 5 },
     actionsRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }
 });
