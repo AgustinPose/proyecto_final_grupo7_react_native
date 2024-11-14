@@ -1,21 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, Image, FlatList, TouchableOpacity, TextInput, StyleSheet, SafeAreaView } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
+import { useAuth } from '../../components/AuthContext';
+import { router } from 'expo-router';
+import PerfilDefecto from '../../assets/images/perfilDefecto.jpg';
 import { useNavigation } from '@react-navigation/native';
+import { useState, useEffect } from 'react';
 
-const Feed = ({ onLogout }) => {
+export default function Feed() {
     const navigation = useNavigation();
+    const { token, userId, clearCredentials } = useAuth();
+    const [friends, setFriends] = useState([]);
     const [posts, setPosts] = useState([]);
-    const currentUserId = '67045766b9179756fe4260df'; // Reemplazar con el ID actual del usuario
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDQ1NzY2YjkxNzk3NTZmZTQyNjBkZiIsImlhdCI6MTczMDkxOTcyNiwiZXhwIjoxNzMzNTExNzI2fQ.EfzqxOt-tsYSHWHHG0vXlywkIWIajJ6c9zgnKX_6bBA'; // Reemplazar con el token de autenticación
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleLogout = async () => {
+        await clearCredentials();
+        router.replace('/login');
+    };
 
     const handleFetchFeed = async () => {
         try {
-            const response = await fetch('http://172.20.10.4:3001/api/posts/feed', {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (!response.ok) throw new Error('Error al obtener el feed');
+            const response = await fetch(
+              "http://10.0.2.6:3001/api/posts/feed", // cambiar segun ip de tu red
+              {
+                method: "GET",
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+            if (!response.ok) {
+                if (response.status === 401) {
+                    await handleLogout();
+                    return;
+                }
+                throw new Error('Error al obtener el feed');
+            }
             const data = await response.json();
             const sortedPosts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             setPosts(sortedPosts);
@@ -25,13 +44,17 @@ const Feed = ({ onLogout }) => {
     };
 
     useEffect(() => {
+        if (!token) {
+            router.replace('/(auth)/login');
+            return;
+        }
         handleFetchFeed();
     }, [token]);
 
     const handleLikeToggle = async (postId, isLiked) => {
         try {
             const method = isLiked ? 'DELETE' : 'POST';
-            const response = await fetch(`http://172.20.10.4:3001/api/posts/${postId}/like`, {
+            const response = await fetch(`http://172.20.10.6:3001/api/posts/${postId}/like`, { //cambiar segun ip de tu red
                 method,
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
             });
@@ -62,7 +85,7 @@ const Feed = ({ onLogout }) => {
 
         return (
             <View style={styles.postCard}>
-                <Image source={{ uri: `http://172.20.10.4:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} />
+                <Image source={{ uri: `http://172.20.10.6:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} /> //cambiar segun ip de tu red
                 <Text style={styles.postUsername}>{post.user.username}</Text>
                 <Text>{post.caption}</Text>
                 <View style={styles.actionsRow}>
@@ -85,7 +108,7 @@ const Feed = ({ onLogout }) => {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.appTitle}>FAKESTAGRAM</Text>
-                    <Icon name="logout" type="material" onPress={onLogout} />
+                    <Icon name="logout" type="material" onPress={handleLogout} />
                 </View>
 
                 <FlatList
@@ -114,5 +137,3 @@ const styles = StyleSheet.create({
     postUsername: { fontWeight: 'bold', marginVertical: 5 },
     actionsRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }
 });
-
-export default Feed;

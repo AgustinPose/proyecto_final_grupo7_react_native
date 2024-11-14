@@ -15,7 +15,7 @@ const SearchScreen = () => {
   // Función para obtener amigos del backend en base al término de búsqueda
   const fetchFriends = async (term) => {
     try {
-      const response = await fetch('http://172.20.10.4:3001/api/user/all', { // Edita la IP según tu red
+      const response = await fetch('http://172.20.10.6:3001/api/user/all', { // Edita la IP según tu red
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` }
       });

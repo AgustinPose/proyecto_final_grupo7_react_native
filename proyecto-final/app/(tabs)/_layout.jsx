@@ -2,6 +2,7 @@ import React, { createContext, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHome, faSearch, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import useColorScheme from '@/hooks/useColorScheme';
 import Feed from './index';
 import SearchScreen from './searchScreen';
 import Postear from './postear';
