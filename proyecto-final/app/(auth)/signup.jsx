@@ -20,7 +20,7 @@ export default function Signup() {
 
   const handleSignup = async () => {
     try {
-      const response = await fetch("http://10.0.2.6:3001/api/auth/register", { //edita segun ip de tu red
+      const response = await fetch("http://172.20.10.6:3001/api/auth/register", { //edita segun ip de tu red
         method: "POST",
         headers: {
           "Content-Type": "application/json",

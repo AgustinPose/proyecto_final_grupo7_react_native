@@ -4,6 +4,7 @@ import { Button, Icon } from 'react-native-elements';
 import { useAuth } from '../../components/AuthContext';
 import { router } from 'expo-router';
 import PerfilDefecto from '../../assets/images/perfilDefecto.jpg';
+import CommentsScreen from '../../components/CommentsScreen';
 import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 
@@ -22,7 +23,7 @@ export default function Feed() {
     const handleFetchFeed = async () => {
         try {
             const response = await fetch(
-              "http://10.0.2.6:3001/api/posts/feed", // cambiar segun ip de tu red
+              "http://172.20.10.6:3001/api/posts/feed", // cambiar segun ip de tu red
               {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}` },
@@ -75,17 +76,17 @@ export default function Feed() {
         );
     };
 
-    const handleComment = (postId) => {
-        navigation.navigate('Comments', { postId });
+    const handleComment = (postId, comments) => {
+        navigation.navigate('CommentsScreen', { postId, initialComments: comments });
     };
 
     const renderPost = ({ item: post }) => {
-        const isLikedByCurrentUser = post.likes.includes(currentUserId);
+        const isLikedByCurrentUser = post.likes.includes(userId);
         const likesCount = post.likes.length;
 
         return (
             <View style={styles.postCard}>
-                <Image source={{ uri: `http://172.20.10.6:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} /> //cambiar segun ip de tu red
+                <Image source={{ uri: `http://172.20.10.6:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} /> 
                 <Text style={styles.postUsername}>{post.user.username}</Text>
                 <Text>{post.caption}</Text>
                 <View style={styles.actionsRow}>
@@ -93,9 +94,9 @@ export default function Feed() {
                         <Icon name="heart" type="material-community" color={isLikedByCurrentUser ? "#ff69b4" : "#808080"} />
                         <Text>{likesCount} Likes</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleComment(post._id)}>
+                    <TouchableOpacity onPress={() => handleComment(post._id, post.comments)}>
                         <Icon name="comment" type="material-community" color="#000" />
-                        <Text>Comment</Text>
+                        <Text>Ver Comentarios</Text>
                     </TouchableOpacity>
                 </View>
             </View>
