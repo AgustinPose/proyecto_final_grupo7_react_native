@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "@fortawesome/free-solid-svg-icons": "^6.6.0",
-    "@fortawesome/react-native-fontawesome": "^0.3.2",
-    "@rneui/themed": "^4.0.0-rc.8",
-    "expo-image-manipulator": "^13.0.5",
-    "expo-router": "^4.0.5"
-  }
-}
