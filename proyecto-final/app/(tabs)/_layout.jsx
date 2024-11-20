@@ -1,37 +1,48 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import React, { createContext, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faHome, faSearch, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Feed from './index';
+import SearchScreen from './searchScreen';
+import Postear from './postear';
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+export const ImagenesContext = createContext();
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
-  );
+const Tab = createBottomTabNavigator();
+
+export default function AppTabs() {
+    const [imagenes, setImagenes] = useState([]); // Estado para almacenar imágenes publicadas
+
+    // Función para agregar una imagen al feed
+    const agregarImagen = (nuevaImagen) => {
+        setImagenes((prevImagenes) => [nuevaImagen, ...prevImagenes]);
+    };
+
+    return (
+        <ImagenesContext.Provider value={{ imagenes, agregarImagen }}>
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ color, size }) => {
+                        let icon;
+
+                        if (route.name === 'Feed') {
+                            icon = faHome;
+                        } else if (route.name === 'Search') {
+                            icon = faSearch;
+                        } else if (route.name === 'Postear') {
+                            icon = faSquarePlus;
+                        }
+
+                        return <FontAwesomeIcon icon={icon} color={color} size={size} />;
+                    },
+                })}
+            >
+                <Tab.Screen name="Feed" component={Feed} />
+                <Tab.Screen name="Postear" component={Postear} />
+                <Tab.Screen name="Search" component={SearchScreen} />
+                
+            </Tab.Navigator>
+        </ImagenesContext.Provider>
+    );
 }
