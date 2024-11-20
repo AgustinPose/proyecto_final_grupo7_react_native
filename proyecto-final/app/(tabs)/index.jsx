@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { View, Text, Image, FlatList, TouchableOpacity, TextInput, StyleSheet, SafeAreaView } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
@@ -21,6 +22,7 @@ export default function Feed() {
     };
 
     const handleFetchFeed = async () => {
+        setRefreshing(true);
         try {
             const response = await fetch(
               "http://172.20.10.6:3001/api/posts/feed", // cambiar segun ip de tu red
@@ -42,7 +44,9 @@ export default function Feed() {
         } catch (error) {
             console.error('Fetch feed error:', error);
         }
+        setRefreshing(false);
     };
+    useEffect(()=>{handleFetchFeed()},[])
 
     useEffect(() => {
         if (!token) {
@@ -65,6 +69,7 @@ export default function Feed() {
             }
         } catch (error) {
             console.error("Error toggling like:", error);
+
         }
     };
 
@@ -109,6 +114,7 @@ export default function Feed() {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.appTitle}>FAKESTAGRAM</Text>
+
                     <Icon name="logout" type="material" onPress={handleLogout} />
                 </View>
 
@@ -117,6 +123,8 @@ export default function Feed() {
                     renderItem={renderPost}
                     keyExtractor={item => item._id}
                     style={styles.postList}
+                    refreshing={refreshing}
+                    onRefresh={()=>{if(!refreshing){handleFetchFeed()}}}
                 />
             </View>
         </SafeAreaView>
@@ -133,8 +141,22 @@ const styles = StyleSheet.create({
     friendImage: { width: 50, height: 50, borderRadius: 25 },
     friendName: { fontSize: 14 },
     postList: { flex: 1 },
-    postCard: { marginBottom: 15, padding: 10, backgroundColor: '#fff', borderRadius: 5 },
-    postImage: { width: '100%', height: 200, borderRadius: 5 },
+    postCard: {
+        marginBottom: 15,  // Espacio debajo de la tarjeta
+        padding: 10,       // Espacio interno de la tarjeta
+        backgroundColor: '#fff',  // Color de fondo blanco
+        borderRadius: 5,   // Bordes redondeados
+        overflow: 'hidden', // Para asegurar que los bordes redondeados de la imagen también se apliquen
+    },
+    
+    postImage: {
+        width: '100%',
+        aspectRatio: 4 / 3,
+        borderRadius: 10,
+        marginVertical: 10,
+        resizeMode: 'cover',    
+    },
+
     postUsername: { fontWeight: 'bold', marginVertical: 5 },
     actionsRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }
 });
