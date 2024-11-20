@@ -41,7 +41,6 @@ export default function AppTabs() {
                 <Tab.Screen name="Feed" component={Feed} />
                 <Tab.Screen name="Postear" component={Postear} />
                 <Tab.Screen name="Search" component={SearchScreen} />
-                
             </Tab.Navigator>
         </ImagenesContext.Provider>
     );

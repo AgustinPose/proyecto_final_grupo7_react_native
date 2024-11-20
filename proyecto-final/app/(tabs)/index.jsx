@@ -28,18 +28,20 @@ const Feed = ({ onLogout }) => {
     useEffect(()=>{handleFetchFeed()},[])
 
 
-    const handleLike = async (postId) => {
+    const handleLikeToggle = async (postId, isLiked) => {
         try {
-            const response = await fetch(`http://172.20.10.6:3001/api/posts/${postId}/like`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` }
+            const method = isLiked ? 'DELETE' : 'POST';
+            const response = await fetch(`http://172.20.10.4:3001/api/posts/${postId}/like`, {
+                method,
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+
             });
             if (response.ok) {
                 const updatedPost = await response.json();
                 updatePostLikes(postId, updatedPost.likes);
             }
         } catch (error) {
-            console.error("Error liking post:", error);
+            console.error("Error toggling like:", error);
         }
     };
 
@@ -55,23 +57,28 @@ const Feed = ({ onLogout }) => {
         navigation.navigate('Comments', { postId });
     };
 
-    const renderPost = ({ item: post }) => (
-        <View style={styles.postCard}>
-            <Image source={{ uri: `http://172.20.10.6:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} />
-            <Text style={styles.postUsername}>{post.user.username}</Text>
-            <Text>{post.caption}</Text>
-            <View style={styles.actionsRow}>
-                <TouchableOpacity onPress={() => handleLike(post._id)}>
-                    <Icon name="heart" type="material-community" color="#f00" />
-                    <Text>{post.likes.length} Likes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleComment(post._id)}>
-                    <Icon name="comment" type="material-community" color="#000" />
-                    <Text>Comment</Text>
-                </TouchableOpacity>
+    const renderPost = ({ item: post }) => {
+        const isLikedByCurrentUser = post.likes.includes(currentUserId);
+        const likesCount = post.likes.length;
+
+        return (
+            <View style={styles.postCard}>
+                <Image source={{ uri: `http://172.20.10.4:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} />
+                <Text style={styles.postUsername}>{post.user.username}</Text>
+                <Text>{post.caption}</Text>
+                <View style={styles.actionsRow}>
+                    <TouchableOpacity onPress={() => handleLikeToggle(post._id, isLikedByCurrentUser)}>
+                        <Icon name="heart" type="material-community" color={isLikedByCurrentUser ? "#ff69b4" : "#808080"} />
+                        <Text>{likesCount} Likes</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleComment(post._id)}>
+                        <Icon name="comment" type="material-community" color="#000" />
+                        <Text>Comment</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
-    );
+        );
+    };
 
 
     return (
@@ -81,7 +88,6 @@ const Feed = ({ onLogout }) => {
                     <Text style={styles.appTitle}>FAKESTAGRAM</Text>
                     <Icon name="logout" type="material" onPress={onLogout} />
                 </View>
-
                 <FlatList
                     data={posts}
                     renderItem={renderPost}
@@ -120,7 +126,6 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         resizeMode: 'cover',    
     },
-    
     postUsername: { fontWeight: 'bold', marginVertical: 5 },
     actionsRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }
 });
