@@ -6,7 +6,6 @@ import { router } from 'expo-router';
 export default function FormularioScreen() {
     const [image, setImage] = useState(null);
     const [caption, setCaption] = useState('');
-
     const [selectedFilter, setSelectedFilter] = useState(null);
 
     const currentUserId = '67045766b9179756fe4260df'; // Reemplazar con el ID actual del usuario
@@ -81,7 +80,6 @@ export default function FormularioScreen() {
 
     return (
         <View style={styles.container}>
-
             <View style={styles.buttonGroup}>
                 <TouchableOpacity style={styles.button} onPress={seleccionarDeGaleria}>
                     <Text style={styles.buttonText}>Añadir imagen</Text>
@@ -106,7 +104,6 @@ export default function FormularioScreen() {
                 onChangeText={setCaption}
                 style={styles.captionInput}
             />
-
 
             <TouchableOpacity style={styles.uploadButton} onPress={handleUpload}>
                 <Text style={styles.buttonText}>Subir publicación</Text>

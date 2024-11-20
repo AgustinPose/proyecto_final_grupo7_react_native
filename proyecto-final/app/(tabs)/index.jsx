@@ -117,7 +117,6 @@ export default function Feed() {
 
                     <Icon name="logout" type="material" onPress={handleLogout} />
                 </View>
-
                 <FlatList
                     data={posts}
                     renderItem={renderPost}
@@ -156,7 +155,6 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         resizeMode: 'cover',    
     },
-
     postUsername: { fontWeight: 'bold', marginVertical: 5 },
     actionsRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }
 });
