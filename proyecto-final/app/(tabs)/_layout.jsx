@@ -2,17 +2,33 @@ import React, { createContext, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHome, faSearch, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Feed from './index';
 import SearchScreen from './searchScreen';
 import Postear from './postear';
-
+import CommentsScreen from '@/components/CommentsScreen';
 export const ImagenesContext = createContext();
 
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+const FeedStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Feed" component={Feed} />
+      <Stack.Screen
+        name="CommentsScreen"
+        component={CommentsScreen}
+        options={{ presentation: 'modal', headerShown: false }} // Puedes personalizar este header si lo deseas
+      />
+    </Stack.Navigator>
+  );
+};
 
 export default function AppTabs() {
-    const [imagenes, setImagenes] = useState([]); // Estado para almacenar imágenes publicadas
+  
+  const [imagenes, setImagenes] = useState([]); // Estado para almacenar imágenes publicadas
 
     // Función para agregar una imagen al feed
     const agregarImagen = (nuevaImagen) => {
@@ -41,6 +57,7 @@ export default function AppTabs() {
                 <Tab.Screen name="Feed" component={Feed} />
                 <Tab.Screen name="Postear" component={Postear} />
                 <Tab.Screen name="Search" component={SearchScreen} />
+                
             </Tab.Navigator>
         </ImagenesContext.Provider>
     );
