@@ -11,6 +11,7 @@ export function AuthProvider({ children }) {
 
   const storeCredentials = async (token, userId) => {
     try {
+      console.log({token, userId});
       await SecureStore.setItemAsync('userToken', token);
       await SecureStore.setItemAsync('userId', userId);
       setToken(token);

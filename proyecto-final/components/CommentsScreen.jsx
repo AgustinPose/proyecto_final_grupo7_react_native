@@ -3,6 +3,7 @@ import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet } from "r
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "./AuthContext";
 import { useRoute } from '@react-navigation/native'; 
+import { API_BASE_URL } from "@/constants/config";
 
 const CommentScreen = ( ) => {
   const route = useRoute();
@@ -22,7 +23,7 @@ const CommentScreen = ( ) => {
     if (!newComment.trim()) return;
   
     const response = await fetch(
-      `http://172.20.10.6:3001/api/posts/${postId}/comments`,
+      `${API_BASE_URL}/api/posts/${postId}/comments`,
       {
         method: "POST",
         headers: {
@@ -51,7 +52,7 @@ const CommentScreen = ( ) => {
   const handleDeleteComment = async (commentId) => {
     try {
       const response = await fetch(
-        `http://172.20.10.6:3001/api/posts/${postId}/comments/${commentId}`,
+        `${API_BASE_URL}/api/posts/${postId}/comments/${commentId}`,
         {
           method: "DELETE",
           headers: {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, Alert, TextInput, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
+import { API_BASE_URL } from '@/constants/config';
 
 export default function FormularioScreen() {
     const [image, setImage] = useState(null);
@@ -53,7 +54,7 @@ export default function FormularioScreen() {
         formData.append('caption', caption);
 
         try {
-            const response = await fetch('http://172.20.10.6:3001/api/posts/upload', { //cambiar segun ip de tu red
+            const response = await fetch(`${API_BASE_URL}/api/posts/upload`, { //cambiar segun ip de tu red
 
                 method: 'POST',
                 headers: {

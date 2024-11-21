@@ -8,24 +8,27 @@ import PerfilDefecto from '../../assets/images/perfilDefecto.jpg';
 import CommentsScreen from '../../components/CommentsScreen';
 import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
+import {API_BASE_URL} from '../../constants/config';
 
 export default function Feed() {
     const navigation = useNavigation();
     const { token, userId, clearCredentials } = useAuth();
+    console.log("Hola a todos bro",{token});
     const [friends, setFriends] = useState([]);
     const [posts, setPosts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [refreshing,setRefreshing]=useState(false);
 
     const handleLogout = async () => {
         await clearCredentials();
-        router.replace('/login');
+        router.replace('auth/login');
     };
 
     const handleFetchFeed = async () => {
         setRefreshing(true);
         try {
             const response = await fetch(
-              "http://172.20.10.6:3001/api/posts/feed", // cambiar segun ip de tu red
+              `${API_BASE_URL}/api/posts/feed`, // cambiar segun ip de tu red
               {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}` },
@@ -36,7 +39,6 @@ export default function Feed() {
                     await handleLogout();
                     return;
                 }
-                throw new Error('Error al obtener el feed');
             }
             const data = await response.json();
             const sortedPosts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -50,7 +52,7 @@ export default function Feed() {
 
     useEffect(() => {
         if (!token) {
-            router.replace('/(auth)/login');
+            router.replace('auth/login');
             return;
         }
         handleFetchFeed();
@@ -59,7 +61,7 @@ export default function Feed() {
     const handleLikeToggle = async (postId, isLiked) => {
         try {
             const method = isLiked ? 'DELETE' : 'POST';
-            const response = await fetch(`http://172.20.10.6:3001/api/posts/${postId}/like`, { //cambiar segun ip de tu red
+            const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, { //cambiar segun ip de tu red
                 method,
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
             });
@@ -91,7 +93,7 @@ export default function Feed() {
 
         return (
             <View style={styles.postCard}>
-                <Image source={{ uri: `http://172.20.10.6:3001/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} /> 
+                <Image source={{ uri: `${API_BASE_URL}/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} /> 
                 <Text style={styles.postUsername}>{post.user.username}</Text>
                 <Text>{post.caption}</Text>
                 <View style={styles.actionsRow}>

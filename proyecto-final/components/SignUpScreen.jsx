@@ -12,7 +12,7 @@ export function SignupScreen() {
 
   const handleSignup = async () => {
     try {
-      const response = await fetch('http://172.20.10.6:3001/api/auth/register', { // editar segun ip de tu red
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, { // editar segun ip de tu red
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

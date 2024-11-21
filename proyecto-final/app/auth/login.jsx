@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useAuth } from "../../components/AuthContext";
 import { router } from "expo-router";
+import { API_BASE_URL } from "@/constants/config";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://172.20.10.6:3001/api/auth/login", { //edita segun ip de tu red 
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, { //edita segun ip de tu red 
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,7 +27,7 @@ export default function Login() {
       });
 
       const data = await response.json();
-
+      console.log({data}, "hola");
       if (!response.ok) {
         Alert.alert("Error", data.message || "Credenciales incorrectas");
         return;
@@ -34,7 +35,7 @@ export default function Login() {
 
       if (data.token) {
         await storeCredentials(data.token, data._id); // Guarda token e id
-        router.replace("/(tabs)/index"); // Redirecciona al feed después del login
+        router.replace("/(tabs)"); // Redirecciona al feed después del login
       }
     } catch (error) {
       Alert.alert("Error", "Error de red, por favor inténtalo de nuevo.");
@@ -67,7 +68,7 @@ export default function Login() {
           <Text style={styles.buttonText}>Ingresar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push("/signup")}>
+        <TouchableOpacity onPress={() => router.replace("auth/signup")}>
           <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
         </TouchableOpacity>
       </View>
