@@ -13,7 +13,6 @@ import {API_BASE_URL} from '../../constants/config';
 export default function Feed() {
     const navigation = useNavigation();
     const { token, userId, clearCredentials } = useAuth();
-    console.log("Hola a todos bro",{token});
     const [friends, setFriends] = useState([]);
     const [posts, setPosts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
