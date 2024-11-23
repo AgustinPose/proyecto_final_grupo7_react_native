@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList, TextInput, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
-import PerfilDefecto from '../../assets/images/perfilDefecto.jpg';
+import PerfilDefecto from '../../../assets/images/perfilDefecto.jpg';
 import { useNavigation } from '@react-navigation/native';
-import { API_BASE_URL } from '../../constants/config';
+import { API_BASE_URL } from '../../../constants/config';
 
 const SearchScreen = () => {
   const [friends, setFriends] = useState([]);
@@ -46,6 +46,10 @@ const SearchScreen = () => {
       setFriends([]);
     }
   }, [searchTerm]);
+
+  const handleFriendProfileClick = (userId) => {
+    navigation.navigate('UserProfileFriend', { friendId: userId });
+  }
 
   // Renderizar cada amigo en la lista
   const renderFriend = ({ item: friend }) => (

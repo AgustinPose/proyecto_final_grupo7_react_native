@@ -4,7 +4,7 @@ import { faHome, faSearch, faSquarePlus, faUser } from '@fortawesome/free-solid-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Feed from './index';
 import Perfil from './perfil';
-import SearchScreen from './searchScreen';
+import SearchTab from './searchTab/_layout'; 
 import Postear from './postear';
 export const ImagenesContext = createContext();
 
@@ -44,7 +44,7 @@ export default function AppTabs() {
             >
                 <Tab.Screen name="Feed" component={Feed} />
                 <Tab.Screen name="Postear" component={Postear} />
-                <Tab.Screen name="Search" component={SearchScreen} />
+                <Tab.Screen name="Search" component={SearchTab} /> 
                 <Tab.Screen name="Perfil" component={Perfil} />
             </Tab.Navigator>
         </ImagenesContext.Provider>
