@@ -21,6 +21,7 @@ export default function Perfil() {
     const [isEditing, setIsEditing] = useState(false);
     const [newUsername, setNewUsername] = useState('');
     const [newDescription, setNewDescription] = useState('');
+    const [profileImage, setProfileImage] = useState(null);
     const [profileImagePreview, setProfileImagePreview] = useState(null);
     const [error, setError] = useState('');
 
@@ -42,7 +43,7 @@ export default function Perfil() {
             setFeedPosts(data.posts);
             setNewUsername(data.user.username);
             setNewDescription(data.user.description);
-            setProfileImagePreview(data.user.profilePicture ? `${API_BASE_URL}/${data.user.profilePicture.replace(/\\/g, '/')}` : perfilDefecto);
+            setProfileImagePreview(data.user.profilePicture || null);
         } catch (error) {
             setError(error.message);
         }
@@ -149,6 +150,12 @@ export default function Perfil() {
                     ) : (
                         <Text style={styles.username}>{profileData.username}</Text>
                     )}
+                    {!isEditing && (
+                        <View style={styles.profileStats}>
+                            <Text>{feedPosts.length} posts</Text>
+                            <Text>{profileData.friends.length} friends</Text>
+                        </View>
+                    )}
                     {isEditing ? (
                         <TextInput
                             style={[styles.input, styles.textArea]}
@@ -198,7 +205,7 @@ const styles = StyleSheet.create({
     profileImage: { width: 100, height: 100, borderRadius: 50 },
     profileInfo: { flex: 1, marginLeft: 16 },
     username: { fontSize: 24, fontWeight: 'bold' },
-    description: { fontSize: 16, color: '#666' },
+    description: { fontSize: 16 },
     input: { borderWidth: 1, padding: 8, marginBottom: 8 },
     textArea: { height: 80 },
     saveButton: { backgroundColor: '#28a745', padding: 10, borderRadius: 8, marginBottom: 10 },
@@ -208,4 +215,5 @@ const styles = StyleSheet.create({
     postDescription: { marginTop: 8 },
     error: { textAlign: 'center', color: 'red' },
     loading: { textAlign: 'center', color: '#666' },
+    profileStats: { flexDirection: 'row', marginBottom: 8, display: 'flex', gap: 16, color: '#666' },
 });
