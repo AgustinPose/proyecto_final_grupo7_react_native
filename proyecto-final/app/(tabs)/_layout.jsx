@@ -1,14 +1,18 @@
-import React, { createContext, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faSearch, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import Feed from './index';
-import SearchScreen from './searchScreen';
-import Postear from './postear';
-import CommentsScreen from '@/components/CommentsScreen';
-
+import React, { createContext, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  faHome,
+  faSearch,
+  faSquarePlus,
+} from "@fortawesome/free-solid-svg-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Feed from "./index";
+import SearchScreen from "./searchScreen";
+import Postear from "./postear";
 export const ImagenesContext = createContext();
+import { createStackNavigator } from '@react-navigation/stack';
+import CommentsSection from './CommentsSection';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -18,8 +22,8 @@ const FeedStack = () => {
     <Stack.Navigator>
       <Stack.Screen name="Feed" component={Feed} />
       <Stack.Screen
-        name="CommentsScreen"
-        component={CommentsScreen}
+        name="CommentsSection"
+        component={CommentsSection}
         options={{ presentation: 'modal', headerShown: false }} // Puedes personalizar este header si lo deseas
       />
     </Stack.Navigator>
@@ -27,8 +31,9 @@ const FeedStack = () => {
 };
 
 export default function AppTabs() {
-  const [imagenes, setImagenes] = useState([]);
+  const [imagenes, setImagenes] = useState([]); // Estado para almacenar imágenes publicadas
 
+  // Función para agregar una imagen al feed
   const agregarImagen = (nuevaImagen) => {
     setImagenes((prevImagenes) => [nuevaImagen, ...prevImagenes]);
   };
@@ -36,15 +41,16 @@ export default function AppTabs() {
   return (
     <ImagenesContext.Provider value={{ imagenes, agregarImagen }}>
       <Tab.Navigator
+        initialRouteName="Feed" // Agregamos esto
         screenOptions={({ route }) => ({
           tabBarIcon: ({ color, size }) => {
             let icon;
 
-            if (route.name === 'Feed') {
+            if (route.name === "Feed") {
               icon = faHome;
-            } else if (route.name === 'Search') {
+            } else if (route.name === "Search") {
               icon = faSearch;
-            } else if (route.name === 'Postear') {
+            } else if (route.name === "Postear") {
               icon = faSquarePlus;
             }
 
@@ -53,8 +59,8 @@ export default function AppTabs() {
         })}
       >
         <Tab.Screen name="Feed" component={FeedStack} />
-        <Tab.Screen name="Search" component={SearchScreen} />
         <Tab.Screen name="Postear" component={Postear} />
+        <Tab.Screen name="Search" component={SearchScreen} />
       </Tab.Navigator>
     </ImagenesContext.Provider>
   );

@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useAuth } from "../../components/AuthContext";
 import { router } from "expo-router";
+import { API_BASE_URL } from "@/constants/config";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ export default function Signup() {
 
   const handleSignup = async () => {
     try {
-      const response = await fetch("http://172.20.10.6:3001/api/auth/register", { //edita segun ip de tu red
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, { //edita segun ip de tu red
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +79,7 @@ export default function Signup() {
           <Text style={styles.buttonText}>Registrarse</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push("/login")}>
+        <TouchableOpacity onPress={() => router.replace("/auth/login")}>
           <Text style={styles.linkText}>¿Ya tienes cuenta? Inicia sesión</Text>
         </TouchableOpacity>
       </View>

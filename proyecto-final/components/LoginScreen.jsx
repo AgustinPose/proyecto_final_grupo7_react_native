@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import { useAuth } from './AuthContext';
+import { API_BASE_URL } from '@/constants/config';
 
 export function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -9,7 +10,7 @@ export function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://172.20.10.6:3001/api/auth/login', { //edita segun ip de tu red
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, { //edita segun ip de tu red
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +60,7 @@ export function LoginScreen() {
           <Text style={styles.buttonText}>Ingresar</Text>
         </TouchableOpacity>
         
-        <TouchableOpacity onPress={() => router.push('/signup')}>
+        <TouchableOpacity onPress={() => router.push('auth/signup')}>
           <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
         </TouchableOpacity>
       </View>
