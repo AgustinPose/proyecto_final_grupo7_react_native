@@ -22,7 +22,7 @@ Aclaracion: En nuestro proyecto, el backend corre en el puerto 3001.
 
 # Funcionalidades del proyecto
 
-Nuestro proyecto, como se nos presentó en la letra al comienzo, simula ser una red social al estilo de Instagram version mobile (allí su nombre fake-instagram), si bien no cuenta con todas las funcionalidades de Instagram, logra alguna de las funcionalidades más importantes.
+Nuestro proyecto, como se nos presentó en la letra al comienzo, simula ser una red social al estilo de Instagram version mobile (allí su nombre fake-instagram), si bien no cuenta con todas las funcionalidades de Instagram, logra alguna de las prestaciones más importantes.
 
 La mayoria de los integrantes (3 de 4) desarrollamos la aplicación utilizando un iPhone por lo que su funcionamiento fue más probado con esos dispositivos.
 Una pequeña aclaración para que la UX sea la mejor, se recomienda utilziar su celular en "modo claro".
