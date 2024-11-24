@@ -4,14 +4,15 @@ import { Button, Icon } from 'react-native-elements';
 import PerfilDefecto from '../../../assets/images/perfilDefecto.jpg';
 import { useNavigation } from '@react-navigation/native';
 import { API_BASE_URL } from '../../../constants/config';
+import { useAuth } from '../../../components/AuthContext';
 
 const SearchScreen = () => {
   const [friends, setFriends] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const navigation = useNavigation();
-  const currentUserId = '67045766b9179756fe4260df'; // Reemplazar con el ID actual del usuario
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDQ1NzY2YjkxNzk3NTZmZTQyNjBkZiIsImlhdCI6MTczMDkxOTcyNiwiZXhwIjoxNzMzNTExNzI2fQ.EfzqxOt-tsYSHWHHG0vXlywkIWIajJ6c9zgnKX_6bBA'; // Reemplazar con el token de autenticación
+  const { token, userId } = useAuth();
+
 
   // Función para obtener amigos del backend en base al término de búsqueda
   const fetchFriends = async (term) => {
@@ -24,7 +25,7 @@ const SearchScreen = () => {
       const data = await response.json();
       // Filtra amigos que coincidan con el término de búsqueda y excluye al usuario actual
       const filteredFriends = data
-        .filter(friend => friend._id !== currentUserId && friend.username.toLowerCase().includes(term.toLowerCase()));
+        .filter(friend => friend._id !== userId && friend.username.toLowerCase().includes(term.toLowerCase()));
       setFriends(filteredFriends);
     } catch (error) {
       console.error('Error fetching friends:', error);
@@ -75,8 +76,9 @@ const SearchScreen = () => {
       </View>
 
       {!isSearching && friends.length === 0 && searchTerm.length > 0 && (
-        <Text>No se encontraron usuarios.</Text>
+        <Text style={styles.noResultsText}>No se encontraron usuarios.</Text>
       )}
+
 
       <FlatList
         data={friends}
@@ -89,13 +91,67 @@ const SearchScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, padding: 10 },
-  searchContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  searchInput: { flex: 1, padding: 5, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, marginRight: 10 },
-  friendList: { marginBottom: 10 },
-  friendCard: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderColor: '#ccc' },
-  friendImage: { width: 50, height: 50, borderRadius: 25, marginRight: 10 },
-  friendName: { fontSize: 16, fontWeight: 'bold' },
+  safeArea: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#f5f5f5',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  searchInput: {
+    flex: 1,
+    padding: 10,
+    fontSize: 16,
+    color: '#333',
+    marginRight: 10,
+  },
+  friendList: {
+    marginBottom: 16,
+  },
+  friendCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: 'white',
+    borderRadius: 12,
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  friendImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginRight: 16,
+    borderWidth: 2,
+    borderColor: '#e0e0e0',
+  },
+  friendName: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#2c3e50',
+  },
+  noResultsText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#666',
+    marginTop: 20,
+  }
 });
+
 
 export default SearchScreen;

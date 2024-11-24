@@ -12,7 +12,6 @@ export default function FormularioScreen() {
     const { token, userId, clearCredentials } = useAuth();
 
 
-    
     const seleccionarDeGaleria = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -46,17 +45,21 @@ export default function FormularioScreen() {
             Alert.alert('Por favor selecciona una imagen primero');
             return;
         }
+
+        // Get the filename from the image URI
+        const imageUriParts = image.split('/');
+        const filename = imageUriParts[imageUriParts.length - 1];
+
         const formData = new FormData();
         formData.append('image', {
             uri: image,
-            name: 'post.jpg',
-            type: 'image/jpeg',
+            name: filename,
+            type: 'image/jpeg'
         });
         formData.append('caption', caption);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/posts/upload`, { //cambiar segun ip de tu red
-
+            const response = await fetch(`${API_BASE_URL}/api/posts/upload`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -79,6 +82,7 @@ export default function FormularioScreen() {
             Alert.alert('Error de red', 'No se pudo conectar con el servidor');
         }
     };
+
 
     return (
         <View style={styles.container}>

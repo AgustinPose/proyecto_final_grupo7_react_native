@@ -4,19 +4,19 @@ import { View, Text, Image, FlatList, TouchableOpacity, TextInput, StyleSheet, S
 import { Button, Icon } from 'react-native-elements';
 import { useAuth } from '../../components/AuthContext';
 import { router } from 'expo-router';
-import PerfilDefecto from '../../assets/images/perfilDefecto.jpg';
-import CommentsScreen from '../../components/CommentsScreen';
+// import PerfilDefecto from '../../assets/images/perfilDefecto.jpg';
+// import CommentsScreen from '../../components/CommentsScreen';
 import { useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
-import {API_BASE_URL} from '../../constants/config';
+import { API_BASE_URL } from '../../constants/config';
 
 export default function Feed() {
     const navigation = useNavigation();
     const { token, userId, clearCredentials } = useAuth();
-    const [friends, setFriends] = useState([]);
+    // const [searchTerm, setSearchTerm] = useState('');
+    // const [friends, setFriends] = useState([]);
     const [posts, setPosts] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [refreshing,setRefreshing]=useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     const handleLogout = async () => {
         await clearCredentials();
@@ -27,11 +27,11 @@ export default function Feed() {
         setRefreshing(true);
         try {
             const response = await fetch(
-              `${API_BASE_URL}/api/posts/feed`, // cambiar segun ip de tu red
-              {
-                method: "GET",
-                headers: { Authorization: `Bearer ${token}` },
-              }
+                `${API_BASE_URL}/api/posts/feed`, // cambiar segun ip de tu red
+                {
+                    method: "GET",
+                    headers: { Authorization: `Bearer ${token}` },
+                }
             );
             if (!response.ok) {
                 if (response.status === 401) {
@@ -47,7 +47,7 @@ export default function Feed() {
         }
         setRefreshing(false);
     };
-    useEffect(()=>{handleFetchFeed()},[])
+    useEffect(() => { handleFetchFeed() }, [])
 
     useEffect(() => {
         if (!token) {
@@ -92,7 +92,14 @@ export default function Feed() {
 
         return (
             <View style={styles.postCard}>
-                <Image source={{ uri: `${API_BASE_URL}/${post.imageUrl.replace(/\\/g, '/')}` }} style={styles.postImage} /> 
+                <Image
+                    source={{
+                        uri: `${API_BASE_URL}/api/image/${post.imageUrl}`,
+                        headers: { Authorization: `Bearer ${token}` }
+                    }}
+                    style={styles.postImage}
+                />
+
                 <Text style={styles.postUsername}>{post.user.username}</Text>
                 <Text>{post.caption}</Text>
                 <View style={styles.actionsRow}>
@@ -124,7 +131,7 @@ export default function Feed() {
                     keyExtractor={item => item._id}
                     style={styles.postList}
                     refreshing={refreshing}
-                    onRefresh={()=>{if(!refreshing){handleFetchFeed()}}}
+                    onRefresh={() => { if (!refreshing) { handleFetchFeed() } }}
                 />
             </View>
         </SafeAreaView>
@@ -148,13 +155,13 @@ const styles = StyleSheet.create({
         borderRadius: 5,   // Bordes redondeados
         overflow: 'hidden', // Para asegurar que los bordes redondeados de la imagen también se apliquen
     },
-    
+
     postImage: {
         width: '100%',
         aspectRatio: 4 / 3,
         borderRadius: 10,
         marginVertical: 10,
-        resizeMode: 'cover',    
+        resizeMode: 'cover',
     },
     postUsername: { fontWeight: 'bold', marginVertical: 5 },
     actionsRow: { flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }
