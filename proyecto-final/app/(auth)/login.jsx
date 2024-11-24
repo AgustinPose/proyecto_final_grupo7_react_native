@@ -34,7 +34,7 @@ export default function Login() {
 
       if (data.token) {
         await storeCredentials(data.token, data._id); // Guarda token e id
-        router.replace("/(tabs)/index"); // Redirecciona al feed después del login
+        router.replace("/(tabs)"); // Redirecciona al feed después del login
       }
     } catch (error) {
       Alert.alert("Error", "Error de red, por favor inténtalo de nuevo.");
