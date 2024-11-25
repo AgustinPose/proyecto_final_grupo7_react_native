@@ -10,9 +10,8 @@ import Feed from "./index";
 import SearchScreen from "./searchScreen";
 import Postear from "./postear";
 export const ImagenesContext = createContext();
-import { createStackNavigator } from '@react-navigation/stack';
-import CommentsSection from './CommentsSection';
-
+import { createStackNavigator } from "@react-navigation/stack";
+import CommentsSection from "./CommentsSection";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -20,11 +19,15 @@ const Stack = createStackNavigator();
 const FeedStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Feed" component={Feed} />
+      <Stack.Screen
+        name="Feed"
+        component={Feed}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen
         name="CommentsSection"
         component={CommentsSection}
-        options={{ presentation: 'modal', headerShown: false }} // Puedes personalizar este header si lo deseas
+        options={{ presentation: "modal", headerShown: false }} // Puedes personalizar este header si lo deseas
       />
     </Stack.Navigator>
   );
@@ -58,7 +61,11 @@ export default function AppTabs() {
           },
         })}
       >
-        <Tab.Screen name="Feed" component={FeedStack} />
+        <Tab.Screen
+          name="Feed"
+          component={FeedStack}
+          options={{ headerShown: false }}
+        />
         <Tab.Screen name="Postear" component={Postear} />
         <Tab.Screen name="Search" component={SearchScreen} />
       </Tab.Navigator>

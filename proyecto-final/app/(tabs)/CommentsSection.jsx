@@ -12,11 +12,11 @@ import { API_BASE_URL } from "../../constants/config";
 import { useAuth } from "../../components/AuthContext";
 
 const CommentsSection = ({ route, navigation }) => {
-  const { postId, initialComments } = route.params; // Recibe postId y comentarios iniciales de la navegación
+  const { postId, initialComments, onCommentChange } = route.params; // Recibe postId y comentarios iniciales de la navegación
   const [comments, setComments] = useState(initialComments || []);
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState("");
-  const { token, currentUserId } = useAuth();
+  const { token, userId } = useAuth();
 
   useEffect(() => {
     setComments(initialComments || []);
@@ -63,13 +63,19 @@ const CommentsSection = ({ route, navigation }) => {
       );
 
       if (response.ok) {
+        // Actualiza la lista de comentarios local
         setComments((prevComments) =>
           prevComments.filter((comment) => comment._id !== commentId)
         );
+
+        // Llama al callback para refrescar el feed CD - recargar feed, no funciona aun
+        if (onCommentChange) {
+          onCommentChange(); // Esto dispara la actualización en el feed
+        }
       } else if (response.status === 403) {
         setError("No puedes eliminar este comentario");
       } else if (response.status === 404) {
-        setError("Comentario no encontrado");
+        setError("Este comentario ya no existe, recarga tu feed");
       } else {
         setError("Error al intentar eliminar el comentario");
       }
@@ -80,7 +86,7 @@ const CommentsSection = ({ route, navigation }) => {
   };
 
   const renderComment = ({ item }) => {
-    const isCurrentUser = item.user?._id === currentUserId;
+    const isCurrentUser = item.user?._id === userId;
 
     return (
       <View style={styles.commentContainer}>

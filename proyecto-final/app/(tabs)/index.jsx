@@ -97,10 +97,16 @@ export default function Feed() {
     );
   };
 
+  const handleRefreshFeed = () => {
+    console.log("Feed refreshed"); // Lógica para actualizar el feed
+    handleFetchFeed(); // Tu lógica para recargar el feed
+  };
+
   const handleComment = (postId, comments) => {
     navigation.navigate("CommentsSection", {
       postId,
       initialComments: comments,
+      onCommentChange: handleRefreshFeed(),
     });
   };
 
