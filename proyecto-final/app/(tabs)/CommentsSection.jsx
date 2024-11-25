@@ -7,6 +7,8 @@ import {
   FlatList,
   Alert,
   StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { API_BASE_URL } from "../../constants/config";
 import { useAuth } from "../../components/AuthContext";
@@ -40,14 +42,25 @@ const CommentsSection = ({ route, navigation }) => {
 
       if (!response.ok) throw new Error("Error al publicar el comentario");
 
+      // After successfully posting the comment
       const savedComment = await response.json();
-      setComments((prevComments) => [...prevComments, savedComment]);
-      setNewComment("");
+      
+      // Trigger the refresh callback
+      if (onCommentChange) {
+        onCommentChange();
+      }
+      
+      // Navigate back to refresh the feed
+      navigation.goBack();
+      
     } catch (error) {
       setError("No se pudo publicar el comentario");
       console.error(error);
     }
-  };
+};
+
+ 
+  
 
   const handleDeleteComment = async (commentId) => {
     try {
@@ -119,16 +132,20 @@ const CommentsSection = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+    >
       <FlatList
         data={comments}
         keyExtractor={(item) => item._id}
         renderItem={renderComment}
         contentContainerStyle={styles.commentsList}
       />
-
+  
       {error && <Text style={styles.error}>{error}</Text>}
-
+  
       <View style={styles.form}>
         <TextInput
           style={styles.input}
@@ -147,7 +164,7 @@ const CommentsSection = ({ route, navigation }) => {
           <Text style={styles.submitButtonText}>Publicar</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

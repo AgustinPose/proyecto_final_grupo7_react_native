@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "./AuthContext";
-import { useRoute } from '@react-navigation/native'; 
+import { useRoute } from '@react-navigation/native';
 import { API_BASE_URL } from "../constants/config";
 
-const CommentScreen = ( ) => {
+const CommentScreen = () => {
   const route = useRoute();
-  const { postId, initialComments } = route.params; 
+  const { postId, initialComments } = route.params;
   const [comments, setComments] = useState(initialComments || []);
   const [newComment, setNewComment] = useState("");
   const [error, setError] = useState("");
-  const { token, userId } = useAuth();
+  const { token, userId, username } = useAuth();
   const navigation = useNavigation();
 
   // Actualiza los comentarios al recibir nuevos datos
@@ -22,33 +22,55 @@ const CommentScreen = ( ) => {
   const handleSubmitComment = async () => {
     if (!newComment.trim()) return;
   
-    const response = await fetch(
-      `${API_BASE_URL}/api/posts/${postId}/comments`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ content: newComment }),
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/posts/${postId}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            content: newComment,
+            postId: postId,
+            userId: userId
+          }),
+        }
+      );
+  
+      if (!response.ok) {
+        const errorDetails = await response.text();
+        setError('Error al publicar el comentario');
+        return;
       }
-    );
   
-    console.log('Response:', response); // Añadir un log para verificar la respuesta
+      const savedComment = await response.json();
   
-    if (!response.ok) {
-      const errorDetails = await response.text();
-      console.log('Error details:', errorDetails); // Añadir un log para errores
-      throw new Error(`Error al publicar el comentario: ${errorDetails}`);
+      // Modify the optimistic comment to ensure username is present
+      const optimisticComment = {
+        ...savedComment,
+        user: {
+          _id: userId,
+          username: username  // Explicitly set username here
+        },
+        username: username,  // Add this line to cover different possible data structures
+        userId: {
+          _id: userId,
+          username: username
+        }
+      };
+      
+      // Update comments immediately
+      setComments(prev => [...prev, optimisticComment]);
+      
+      // Rest of the function remains the same...
+    } catch (error) {
+      console.error('Error:', error);
+      setError('Error al conectar con el servidor');
     }
-  
-    const savedComment = await response.json();
-    console.log('Saved comment:', savedComment); // Verifica el comentario guardado
-    setComments((prev) => [...prev, savedComment]);
-    setNewComment("");
   };
   
-
   const handleDeleteComment = async (commentId) => {
     try {
       const response = await fetch(
@@ -80,10 +102,18 @@ const CommentScreen = ( ) => {
   const renderComment = ({ item: comment }) => {
     const isCurrentUser = comment.user?._id === userId;
 
+    console.log(isCurrentUser);
+    
+    // Prioritize username extraction
+    const displayUsername = 
+      comment.user?.username || 
+      comment.username || 
+      comment.userId?.username;
+  
     return (
       <View style={styles.comment}>
         <Text style={styles.commentUsername}>
-          {comment.user?.username || "Usuario desconocido"}
+          {displayUsername}
         </Text>
         <Text style={styles.commentContent}>{comment.content}</Text>
         {isCurrentUser && (
@@ -97,6 +127,7 @@ const CommentScreen = ( ) => {
       </View>
     );
   };
+
 
   return (
     <View style={styles.container}>
@@ -114,7 +145,7 @@ const CommentScreen = ( ) => {
         <TextInput
           value={newComment}
           onChangeText={setNewComment}
-          placeholder="Añade un comentario..."
+          placeholder="Añade un co..."
           style={styles.input}
         />
         <TouchableOpacity

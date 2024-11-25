@@ -3,14 +3,12 @@ import { View, Text, StyleSheet, Image, Alert, TextInput, TouchableOpacity } fro
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { API_BASE_URL } from '@/constants/config';
+import { useAuth } from "../../components/AuthContext";
 
 export default function FormularioScreen() {
     const [image, setImage] = useState(null);
     const [caption, setCaption] = useState('');
-    const [selectedFilter, setSelectedFilter] = useState(null);
-
-    const currentUserId = '67045766b9179756fe4260df'; // Reemplazar con el ID actual del usuario
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDQ1NzY2YjkxNzk3NTZmZTQyNjBkZiIsImlhdCI6MTczMDkxOTcyNiwiZXhwIjoxNzMzNTExNzI2fQ.EfzqxOt-tsYSHWHHG0vXlywkIWIajJ6c9zgnKX_6bBA'; // Reemplazar con el token de autenticación
+    const { token } = useAuth();
 
     const seleccionarDeGaleria = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
