@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, Alert, TextInput, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
-import { API_BASE_URL } from '@/constants/config'
-import { useAuth } from '../../components/AuthContext';;
+import { API_BASE_URL } from '@/constants/config';
+import { useAuth } from "../../components/AuthContext";
+
 
 export default function FormularioScreen() {
     const [image, setImage] = useState(null);
     const [caption, setCaption] = useState('');
-    const [selectedFilter, setSelectedFilter] = useState(null);
     const { token, userId, clearCredentials } = useAuth();
 
 

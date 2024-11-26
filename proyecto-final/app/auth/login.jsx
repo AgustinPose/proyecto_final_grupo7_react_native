@@ -18,7 +18,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, { //edita segun ip de tu red 
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,8 +33,8 @@ export default function Login() {
       }
 
       if (data.token) {
-        await storeCredentials(data.token, data._id); // Guarda token e id
-        router.replace("/(tabs)"); // Redirecciona al feed después del login
+        await storeCredentials(data.token, data._id);
+        router.replace("/(tabs)");
       }
     } catch (error) {
       Alert.alert("Error", "Error de red, por favor inténtalo de nuevo.");
@@ -44,7 +44,7 @@ export default function Login() {
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-        <Text style={styles.title}>Login</Text>
+        <Text style={styles.brandTitle}>FakeInstagram</Text>
 
         <TextInput
           style={styles.input}
@@ -75,53 +75,58 @@ export default function Login() {
   );
 }
 
-// Los estilos siguen igual
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#FAFAFA",
   },
   form: {
     width: "80%",
     padding: 20,
-    backgroundColor: "#f9f9f9",
-    borderRadius: 8,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 5,
+    elevation: 3,
   },
-  title: {
-    fontSize: 24,
+  brandTitle: {
+    fontSize: 32,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
+    color: "#262626",
+    fontStyle: "italic",
   },
   input: {
-    height: 40,
-    borderColor: "#ccc",
+    height: 44,
+    borderColor: "#DBDBDB",
+    backgroundColor: "#FAFAFA",
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 6,
     marginBottom: 15,
-    paddingLeft: 10,
+    paddingLeft: 12,
+    fontSize: 16,
   },
   button: {
-    backgroundColor: "#007bff",
-    paddingVertical: 10,
-    borderRadius: 5,
+    backgroundColor: "#0095F6",
+    paddingVertical: 12,
+    borderRadius: 6,
     alignItems: "center",
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: "#FFFFFF",
+    fontWeight: "600",
+    fontSize: 16,
   },
   linkText: {
     marginTop: 15,
-    color: "#007bff",
+    color: "#0095F6",
     textAlign: "center",
+    fontSize: 14,
+    fontWeight: "500",
   },
 });
