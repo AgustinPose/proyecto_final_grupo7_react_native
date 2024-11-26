@@ -1,23 +1,23 @@
-import React from "react";
-import {
-    View,
-    Text,
-    Image,
-    FlatList,
-    TouchableOpacity,
-    StyleSheet,
-    SafeAreaView,
-} from "react-native";
-import { Icon } from "react-native-elements";
-import { useAuth } from "../../components/AuthContext";
-import { router } from "expo-router";
-import { useNavigation } from "@react-navigation/native";
-import { useState, useEffect } from "react";
-import { API_BASE_URL } from "../../constants/config";
+
+
+import React from 'react';
+import { View, Text, Image, FlatList, TouchableOpacity, TextInput, StyleSheet, SafeAreaView } from 'react-native';
+import { Button, Icon } from 'react-native-elements';
+import { useAuth } from '../../components/AuthContext';
+import { router } from 'expo-router';
+// import PerfilDefecto from '../../assets/images/perfilDefecto.jpg';
+// import CommentsScreen from '../../components/CommentsScreen';
+import { useNavigation } from '@react-navigation/native';
+import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../../constants/config';
 
 export default function Feed() {
     const navigation = useNavigation();
     const { token, userId, clearCredentials } = useAuth();
+    // borrar si no es util
+    // const [searchTerm, setSearchTerm] = useState('');
+    // const [friends, setFriends] = useState([]);
+
     const [posts, setPosts] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
@@ -52,6 +52,7 @@ export default function Feed() {
         }
         setRefreshing(false);
     };
+
     useEffect(() => {
         handleFetchFeed();
     }, []);
@@ -103,6 +104,35 @@ export default function Feed() {
             initialComments: comments,
             onCommentChange: () => handleRefreshFeed(), // Remove the immediate execution
         });
+
+    const renderPost = ({ item: post }) => {
+        const isLikedByCurrentUser = post.likes.includes(userId);
+        const likesCount = post.likes.length;
+
+        return (
+            <View style={styles.postCard}>
+                <Image
+                    source={{
+                        uri: `${API_BASE_URL}/api/image/${post.imageUrl}`,
+                        headers: { Authorization: `Bearer ${token}` }
+                    }}
+                    style={styles.postImage}
+                />
+
+                <Text style={styles.postUsername}>{post.user.username}</Text>
+                <Text>{post.caption}</Text>
+                <View style={styles.actionsRow}>
+                    <TouchableOpacity onPress={() => handleLikeToggle(post._id, isLikedByCurrentUser)}>
+                        <Icon name="heart" type="material-community" color={isLikedByCurrentUser ? "#ff69b4" : "#808080"} />
+                        <Text>{likesCount} Likes</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleComment(post._id, post.comments)}>
+                        <Icon name="comment" type="material-community" color="#000" />
+                        <Text>Ver Comentarios</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
     };
 
 
@@ -204,7 +234,7 @@ export default function Feed() {
                     keyExtractor={(item) => item._id}
                     style={styles.postList}
                     refreshing={refreshing}
-                    onRefresh={handleFetchFeed}
+                    onRefresh={() => { if (!refreshing) { handleFetchFeed() } }}
                 />
             </View>
         </SafeAreaView>
@@ -258,11 +288,6 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         marginRight: 10
     },
-    postImage: {
-        width: "100%",
-        aspectRatio: 1,
-        backgroundColor: "#FAFAFA"
-    },
     postContent: {
         padding: 12
     },
@@ -291,6 +316,13 @@ const styles = StyleSheet.create({
         fontSize: 14,
         lineHeight: 18,
         color: "#262626"
+    postImage: {
+        width: '100%',
+        aspectRatio: 4 / 3,
+        borderRadius: 10,
+        marginVertical: 10,
+        resizeMode: 'cover',
+
     },
     logoutButton: {
         padding: 8
