@@ -15,6 +15,7 @@ export default function Feed() {
     const { token, userId, clearCredentials } = useAuth();
     // const [searchTerm, setSearchTerm] = useState('');
     // const [friends, setFriends] = useState([]);
+
     const [posts, setPosts] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
