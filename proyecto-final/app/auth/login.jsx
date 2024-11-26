@@ -27,7 +27,6 @@ export default function Login() {
       });
 
       const data = await response.json();
-      console.log({data}, "hola");
       if (!response.ok) {
         Alert.alert("Error", data.message || "Credenciales incorrectas");
         return;

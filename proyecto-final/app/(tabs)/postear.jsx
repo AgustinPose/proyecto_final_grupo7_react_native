@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, Alert, TextInput, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
-import { API_BASE_URL } from '@/constants/config';
+import { API_BASE_URL } from '@/constants/config'
+import { useAuth } from '../../components/AuthContext';;
 
 export default function FormularioScreen() {
     const [image, setImage] = useState(null);
     const [caption, setCaption] = useState('');
     const [selectedFilter, setSelectedFilter] = useState(null);
+    const { token, userId, clearCredentials } = useAuth();
 
-    const currentUserId = '67045766b9179756fe4260df'; // Reemplazar con el ID actual del usuario
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDQ1NzY2YjkxNzk3NTZmZTQyNjBkZiIsImlhdCI6MTczMDkxOTcyNiwiZXhwIjoxNzMzNTExNzI2fQ.EfzqxOt-tsYSHWHHG0vXlywkIWIajJ6c9zgnKX_6bBA'; // Reemplazar con el token de autenticación
 
     const seleccionarDeGaleria = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -45,17 +45,21 @@ export default function FormularioScreen() {
             Alert.alert('Por favor selecciona una imagen primero');
             return;
         }
+
+        // Get the filename from the image URI
+        const imageUriParts = image.split('/');
+        const filename = imageUriParts[imageUriParts.length - 1];
+
         const formData = new FormData();
         formData.append('image', {
             uri: image,
-            name: 'post.jpg',
-            type: 'image/jpeg',
+            name: filename,
+            type: 'image/jpeg'
         });
         formData.append('caption', caption);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/posts/upload`, { //cambiar segun ip de tu red
-
+            const response = await fetch(`${API_BASE_URL}/api/posts/upload`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -78,6 +82,7 @@ export default function FormularioScreen() {
             Alert.alert('Error de red', 'No se pudo conectar con el servidor');
         }
     };
+
 
     return (
         <View style={styles.container}>

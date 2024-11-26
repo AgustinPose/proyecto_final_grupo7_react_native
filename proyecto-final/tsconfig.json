@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "components/Collapsible.tsx", "components/ExternalLink.tsx", "components/__tests__/ThemedText-test.tsx", "app/_layout.jsx", "app/(tabs)/_layout.jsx", "app/(tabs)/searchScreen.jsx", "app/(tabs)/index.jsx", "app/+html.tsx", "app/+not-found.jsx"  ]
+, "components/Collapsible.tsx", "components/ExternalLink.tsx", "components/__tests__/ThemedText-test.tsx", "app/_layout.jsx", "app/(tabs)/_layout.jsx", "app/(tabs)/searchTab/searchScreen.jsx", "app/(tabs)/index.jsx", "app/+html.tsx", "app/+not-found.jsx"  ]
 }

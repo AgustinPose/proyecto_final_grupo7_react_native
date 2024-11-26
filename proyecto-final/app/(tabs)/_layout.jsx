@@ -1,9 +1,10 @@
 import React, { createContext, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faHome, faSearch, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faSearch, faSquarePlus, faUser } from '@fortawesome/free-solid-svg-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Feed from './index';
-import SearchScreen from './searchScreen';
+import Perfil from './perfil';
+import SearchTab from './searchTab/_layout'; 
 import Postear from './postear';
 export const ImagenesContext = createContext();
 
@@ -33,6 +34,8 @@ export default function AppTabs() {
                             icon = faSearch;
                         } else if (route.name === 'Postear') {
                             icon = faSquarePlus;
+                        } else if (route.name === 'Perfil') {
+                            icon = faUser;
                         }
 
                         return <FontAwesomeIcon icon={icon} color={color} size={size} />;
@@ -41,7 +44,8 @@ export default function AppTabs() {
             >
                 <Tab.Screen name="Feed" component={Feed} />
                 <Tab.Screen name="Postear" component={Postear} />
-                <Tab.Screen name="Search" component={SearchScreen} />
+                <Tab.Screen name="Search" component={SearchTab} /> 
+                <Tab.Screen name="Perfil" component={Perfil} />
             </Tab.Navigator>
         </ImagenesContext.Provider>
     );
