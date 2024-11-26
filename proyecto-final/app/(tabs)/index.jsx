@@ -104,38 +104,7 @@ export default function Feed() {
             initialComments: comments,
             onCommentChange: () => handleRefreshFeed(), // Remove the immediate execution
         });
-
-    const renderPost = ({ item: post }) => {
-        const isLikedByCurrentUser = post.likes.includes(userId);
-        const likesCount = post.likes.length;
-
-        return (
-            <View style={styles.postCard}>
-                <Image
-                    source={{
-                        uri: `${API_BASE_URL}/api/image/${post.imageUrl}`,
-                        headers: { Authorization: `Bearer ${token}` }
-                    }}
-                    style={styles.postImage}
-                />
-
-                <Text style={styles.postUsername}>{post.user.username}</Text>
-                <Text>{post.caption}</Text>
-                <View style={styles.actionsRow}>
-                    <TouchableOpacity onPress={() => handleLikeToggle(post._id, isLikedByCurrentUser)}>
-                        <Icon name="heart" type="material-community" color={isLikedByCurrentUser ? "#ff69b4" : "#808080"} />
-                        <Text>{likesCount} Likes</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleComment(post._id, post.comments)}>
-                        <Icon name="comment" type="material-community" color="#000" />
-                        <Text>Ver Comentarios</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        );
-    };
-
-
+    }
     // const renderPost = ({ item: post }) => {
     //     const isLikedByCurrentUser = post.likes.includes(userId);
     //     const likesCount = post.likes.length;
@@ -145,25 +114,19 @@ export default function Feed() {
     //             <Image
     //                 source={{
     //                     uri: `${API_BASE_URL}/${post.imageUrl.replace(/\\/g, "/")}`,
+    //                     headers: { Authorization: `Bearer ${token}` }
     //                 }}
     //                 style={styles.postImage}
     //             />
+
     //             <Text style={styles.postUsername}>{post.user.username}</Text>
     //             <Text>{post.caption}</Text>
     //             <View style={styles.actionsRow}>
-    //                 <TouchableOpacity
-    //                     onPress={() => handleLikeToggle(post._id, isLikedByCurrentUser)}
-    //                 >
-    //                     <Icon
-    //                         name="heart"
-    //                         type="material-community"
-    //                         color={isLikedByCurrentUser ? "#ff69b4" : "#808080"}
-    //                     />
+    //                 <TouchableOpacity onPress={() => handleLikeToggle(post._id, isLikedByCurrentUser)}>
+    //                     <Icon name="heart" type="material-community" color={isLikedByCurrentUser ? "#ff69b4" : "#808080"} />
     //                     <Text>{likesCount} Likes</Text>
     //                 </TouchableOpacity>
-    //                 <TouchableOpacity
-    //                     onPress={() => handleComment(post._id, post.comments)}
-    //                 >
+    //                 <TouchableOpacity onPress={() => handleComment(post._id, post.comments)}>
     //                     <Icon name="comment" type="material-community" color="#000" />
     //                     <Text>Ver Comentarios</Text>
     //                 </TouchableOpacity>
@@ -171,6 +134,43 @@ export default function Feed() {
     //         </View>
     //     );
     // };
+
+
+    const renderPost = ({ item: post }) => {
+        const isLikedByCurrentUser = post.likes.includes(userId);
+        const likesCount = post.likes.length;
+
+        return (
+            <View style={styles.postCard}>
+                <Image
+                    source={{
+                        uri: `${API_BASE_URL}/${post.imageUrl.replace(/\\/g, "/")}`,
+                    }}
+                    style={styles.postImage}
+                />
+                <Text style={styles.postUsername}>{post.user.username}</Text>
+                <Text>{post.caption}</Text>
+                <View style={styles.actionsRow}>
+                    <TouchableOpacity
+                        onPress={() => handleLikeToggle(post._id, isLikedByCurrentUser)}
+                    >
+                        <Icon
+                            name="heart"
+                            type="material-community"
+                            color={isLikedByCurrentUser ? "#ff69b4" : "#808080"}
+                        />
+                        <Text>{likesCount} Likes</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => handleComment(post._id, post.comments)}
+                    >
+                        <Icon name="comment" type="material-community" color="#000" />
+                        <Text>Ver Comentarios</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
+    };
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -316,6 +316,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         lineHeight: 18,
         color: "#262626"
+    },
     postImage: {
         width: '100%',
         aspectRatio: 4 / 3,

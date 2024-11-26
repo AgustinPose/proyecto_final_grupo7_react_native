@@ -42,15 +42,12 @@ const CommentsSection = ({ route, navigation }) => {
 
       if (!response.ok) throw new Error("Error al publicar el comentario");
 
-      // After successfully posting the comment
       const savedComment = await response.json();
       
-      // Trigger the refresh callback
       if (onCommentChange) {
         onCommentChange();
       }
       
-      // Navigate back to refresh the feed
       navigation.goBack();
       
     } catch (error) {

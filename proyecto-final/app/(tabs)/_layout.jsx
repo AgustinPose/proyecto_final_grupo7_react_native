@@ -5,11 +5,11 @@ import { faHome, faSearch, faSquarePlus, faUser } from '@fortawesome/free-solid-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Feed from './index';
 import Perfil from './perfil';
-import SearchTab from './searchTab/_layout'; 
+import SearchTab from './searchTab/_layout';
 import Postear from './postear';
 export const ImagenesContext = createContext();
 import { createStackNavigator } from "@react-navigation/stack";
-import CommentsSection from "./CommentsSection";
+import CommentsSection from './CommentsSection';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -25,16 +25,15 @@ const FeedStack = () => {
       <Stack.Screen
         name="CommentsSection"
         component={CommentsSection}
-        options={{ presentation: "modal", headerShown: false }} // Puedes personalizar este header si lo deseas
+        options={{ presentation: "modal", headerShown: false }}
       />
     </Stack.Navigator>
   );
 };
 
 export default function AppTabs() {
-  const [imagenes, setImagenes] = useState([]); // Estado para almacenar imágenes publicadas
+  const [imagenes, setImagenes] = useState([]);
 
-  // Función para agregar una imagen al feed
   const agregarImagen = (nuevaImagen) => {
     setImagenes((prevImagenes) => [nuevaImagen, ...prevImagenes]);
   };
@@ -47,25 +46,29 @@ export default function AppTabs() {
           tabBarIcon: ({ color, size }) => {
             let icon;
 
-                        if (route.name === 'Feed') {
-                            icon = faHome;
-                        } else if (route.name === 'Search') {
-                            icon = faSearch;
-                        } else if (route.name === 'Postear') {
-                            icon = faSquarePlus;
-                        } else if (route.name === 'Perfil') {
-                            icon = faUser;
-                        }
+            if (route.name === 'Feed') {
+              icon = faHome;
+            } else if (route.name === 'Search') {
+              icon = faSearch;
+            } else if (route.name === 'Postear') {
+              icon = faSquarePlus;
+            } else if (route.name === 'Perfil') {
+              icon = faUser;
+            }
 
-                        return <FontAwesomeIcon icon={icon} color={color} size={size} />;
-                    },
-                })}
-            >
-                <Tab.Screen name="Feed" component={Feed} />
-                <Tab.Screen name="Postear" component={Postear} />
-                <Tab.Screen name="Search" component={SearchTab} /> 
-                <Tab.Screen name="Perfil" component={Perfil} />
-            </Tab.Navigator>
-        </ImagenesContext.Provider>
-    );
+            return <FontAwesomeIcon icon={icon} color={color} size={size} />;
+          },
+        })}
+      >
+        <Tab.Screen
+          name="Feed"
+          component={FeedStack}
+          options={{ headerShown: false }}
+        />
+        <Tab.Screen name="Postear" component={Postear} />
+        <Tab.Screen name="Search" component={SearchTab} />
+        <Tab.Screen name="Perfil" component={Perfil} />
+      </Tab.Navigator>
+    </ImagenesContext.Provider>
+  );
 }
