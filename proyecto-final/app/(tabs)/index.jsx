@@ -176,7 +176,7 @@ export default function Feed() {
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.appTitle}>Feed</Text>
+                    <Text style={styles.appTitle}>Fakestagram</Text>
                     <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                         <Icon name="logout" type="material" color="#262626" size={24} />
                     </TouchableOpacity>

@@ -152,8 +152,8 @@ export default function Perfil() {
                     )}
                     {!isEditing && (
                         <View style={styles.profileStats}>
-                            <Text>{feedPosts.length} posts</Text>
-                            <Text>{profileData.friends.length} friends</Text>
+                            <Text>{feedPosts.length} publicaciones</Text>
+                            <Text>{profileData.friends.length} amigos</Text>
                         </View>
                     )}
                     {isEditing ? (
