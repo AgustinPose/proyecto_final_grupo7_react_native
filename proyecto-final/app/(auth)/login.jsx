@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useAuth } from "../../components/AuthContext";
 import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -34,7 +35,7 @@ export default function Login() {
 
       if (data.token) {
         await storeCredentials(data.token, data._id); // Guarda token e id
-        router.replace("/(tabs)/index"); // Redirecciona al feed después del login
+        router.replace("/(tabs)"); // Redirecciona al feed después del login
       }
     } catch (error) {
       Alert.alert("Error", "Error de red, por favor inténtalo de nuevo.");
@@ -42,36 +43,38 @@ export default function Login() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.form}>
-        <Text style={styles.title}>Login</Text>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <View style={styles.form}>
+          <Text style={styles.title}>Login</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Ingresar</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Ingresar</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push("/signup")}>
-          <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/signup")}>
+            <Text style={styles.linkText}>¿No tienes cuenta? Regístrate</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
